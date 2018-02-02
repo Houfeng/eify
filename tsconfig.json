@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "./build/",
+    "outDir": "./lib/",
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "commonjs",
     "target": "es5",
-    "jsx": "react",
-    "experimentalDecorators": true
+    "allowJs": true,
+    "alwaysStrict": false
   },
+  "exclude": [
+    "./lib"
+  ],
   "include": [
-    "./src/**/*"
+    "./src/**/*.ts",
+    "./src/**/*.js"
   ]
 }

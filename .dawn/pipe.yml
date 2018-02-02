@@ -1,22 +1,9 @@
-init:
-  - name: pkginfo
+build:
+  - name: shell
+    script:
+      - tsc --locale zh-CN 
 
 dev:
   - name: shell
     script:
-      - node ./lib/index.js
-
-build:
-  - name: shell
-    script:
-      - dn dev
-
-test:
-  - name: lint
-  - name: unit
-
-publish:
-  - name: shell
-    script:
-      - dn test
-      - npm pu
+      - dn build

@@ -1,6 +1,6 @@
 {
   "name": "eify",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -11,5 +11,8 @@
   "dependencies": {
     "ntils": "^4.0.0",
     "typescript": "^2.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^9.4.4"
   }
 }

@@ -12,7 +12,7 @@ class EventEmitter {
    */
   constructor(target) {
     target = target || this;
-    let emitter = target._emitter_;
+    const emitter = target._emitter_;
     if (emitter) return emitter;
     final(this, '_target_', target);
     final(target, '_emitter_', this);
@@ -45,7 +45,7 @@ class EventEmitter {
     }
     this._listeners_[name] = this._listeners_[name] || [];
     this._listeners_[name].push(listener);
-    let maxListeners = EventEmitter._maxListeners;
+    const maxListeners = EventEmitter._maxListeners;
     if (this._listeners_[name].length > maxListeners) {
       console.warn(
         `The '${name}' event listener is not more than ${maxListeners}`
@@ -66,7 +66,7 @@ class EventEmitter {
         this._removeNativeEventListener(name, listener, capture);
       }
       if (!this._listeners_[name]) return;
-      let index = this._listeners_[name].indexOf(listener);
+      const index = this._listeners_[name].indexOf(listener);
       this._listeners_[name].splice(index, 1);
     } else if (name) {
       if (this._isNative_ && this._listeners_[name]) {
@@ -95,13 +95,72 @@ class EventEmitter {
     if (this._isNative_) {
       return this._emitNativeEvent(name, data, canBubble, cancelAble);
     }
-    if (!this._listeners_[name]) return;
+    const listeners = this._listeners_[name];
+    if (!listeners) return;
     let stopPropagation = false;
-    this._listeners_[name].forEach(function (handler) {
-      let rs = handler.call(this._target_, data);
+    listeners.forEach(function (handler) {
+      const rs = handler.call(this._target_, data);
       if (rs === false) stopPropagation = true;
     }, this);
     return stopPropagation;
+  }
+
+  /**
+   * 触发自身的一个事件 (支持异步 handler，串行执行，仅对非 dom 对象有效)
+   * @param {string} name 事件名称
+   * @param {object} data 传递的对象
+   * @param {string} canBubble 能否冒泡(只在代理 dom 对象时有效)
+   * @param {object} cancelAble 能否取消(只在代理 dom 对象时有效)
+   * @returns {void} 无返回
+   */
+  emitAsync(name, data, canBubble, cancelAble) {
+    if (this._isNative_) {
+      return this._emitNativeEvent(name, data, canBubble, cancelAble);
+    }
+    const listeners = this._listeners_[name];
+    if (!listeners) return;
+    let stopPropagation = false, queue = listeners.slice(0);
+    return new Promise((resolve, reject) => {
+      function done(rs, err) {
+        if (err) return reject(err);
+        if (rs === false) stopPropagation = true;
+        return queue.length > 0 ? exec() : resolve(stopPropagation);
+      }
+      function exec() {
+        const handler = queue.unshift();
+        const rs = handler.call(this._target_, data);
+        return rs && rs.then ? rs.then(done) : done(rs);
+      }
+      exec();
+    });
+  }
+
+  /**
+   * 触发自身的一个事件 (支持异步 handler，并行执行，仅对非 dom 对象有效)
+   * @param {string} name 事件名称
+   * @param {object} data 传递的对象
+   * @param {string} canBubble 能否冒泡(只在代理 dom 对象时有效)
+   * @param {object} cancelAble 能否取消(只在代理 dom 对象时有效)
+   * @returns {void} 无返回
+   */
+  emitParallel(name, data, canBubble, cancelAble) {
+    if (this._isNative_) {
+      return this._emitNativeEvent(name, data, canBubble, cancelAble);
+    }
+    const listeners = this._listeners_[name];
+    if (!listeners) return;
+    let stopPropagation = false, count = 0;
+    return new Promise((resolve, reject) => {
+      function done(rs, err) {
+        if (err) return reject(err);
+        if (rs === false) stopPropagation = true;
+        if (++count >= listeners.length) resolve(stopPropagation);
+      }
+      listeners.forEach(function (handler) {
+        const rs = handler.call(this._target_, data);
+        return rs && rs.then ? rs.then(done) : done(rs);
+      }, this);
+    });
   }
 
   /**
@@ -114,7 +173,7 @@ class EventEmitter {
   _addNativeEventListener(name, listener, capture) {
     this._target_.addEventListener(name, listener, capture);
     //如果存在已注册的自定义 “组合事件”
-    let descriptor = EventEmitter._events[name];
+    const descriptor = EventEmitter._events[name];
     if (descriptor) {
       descriptor.addListener = descriptor.addListener || descriptor.on;
       descriptor.addListener(this, name, listener, capture);
@@ -131,7 +190,7 @@ class EventEmitter {
   _removeNativeEventListener(name, listener, capture) {
     this._target_.removeEventListener(name, listener, capture);
     //如果存在已注册的自定义 “组合事件”
-    let descriptor = EventEmitter._events[name];
+    const descriptor = EventEmitter._events[name];
     if (descriptor) {
       descriptor.removeListener = descriptor.removeListener || descriptor.off;
       descriptor.removeListener(this, name, listener, capture);
@@ -147,7 +206,7 @@ class EventEmitter {
    * @returns {void} 无返回
    */
   _emitNativeEvent(name, data, canBubble, cancelAble) {
-    let event = document.createEvent('HTMLEvents');
+    const event = document.createEvent('HTMLEvents');
     event.initEvent(name, canBubble, cancelAble);
     copy(data, event, ['data']);
     event.data = data;

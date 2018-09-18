@@ -7,3 +7,9 @@ dev:
   - name: shell
     script:
       - dn build
+
+test:
+  - name: call
+    pipe: build
+  - name: lint
+  - name: unit

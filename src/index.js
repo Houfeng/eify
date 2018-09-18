@@ -17,7 +17,7 @@ class EventEmitter {
     final(this, '_target_', target);
     final(target, '_emitter_', this);
     this._isNative_ = this._isNativeObject(this._target_);
-    this._listeners_ = this._listeners_ || {};
+    this._listeners_ = this._listeners_ || Object.create(null);
     this.on = this.$on = this.$addListener = this.addListener;
     this.off = this.$off = this.$removeListener = this.removeListener;
     this.$emit = this.emit;
@@ -127,7 +127,7 @@ class EventEmitter {
         return queue.length > 0 ? exec() : resolve(stopPropagation);
       }
       function exec() {
-        const handler = queue.unshift();
+        const handler = queue.shift();
         const rs = handler.call(this._target_, data);
         return rs && rs.then ? rs.then(done) : done(rs);
       }

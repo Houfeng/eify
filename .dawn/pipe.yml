@@ -12,4 +12,5 @@ test:
   - name: call
     pipe: build
   - name: lint
+    source: ./src
   - name: unit

@@ -206,7 +206,8 @@ class EventEmitter {
    * @returns {void} 无返回
    */
   _emitNativeEvent(name, data, canBubble, cancelAble) {
-    const event = document.createEvent('HTMLEvents');
+    if (!global.document) return;
+    const event = global.document.createEvent('HTMLEvents');
     event.initEvent(name, canBubble, cancelAble);
     copy(data, event, ['data']);
     event.data = data;

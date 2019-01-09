@@ -48,7 +48,7 @@ class EventEmitter {
     const maxListeners = EventEmitter._maxListeners;
     if (this._listeners_[name].length > maxListeners) {
       console.warn(
-        `The '${name}' event listener is not more than ${maxListeners}`
+        `The '${name}' event listener is not more than ${maxListeners}`, this
       );
     }
   }

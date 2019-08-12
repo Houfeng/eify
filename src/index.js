@@ -67,7 +67,7 @@ class EventEmitter {
       }
       if (!this._listeners_[name]) return;
       const index = this._listeners_[name].indexOf(listener);
-      this._listeners_[name].splice(index, 1);
+      if (index > -1) this._listeners_[name].splice(index, 1);
     } else if (name) {
       if (this._isNative_ && this._listeners_[name]) {
         this._listeners_[name].forEach(function (_listener) {

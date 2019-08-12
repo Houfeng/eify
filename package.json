@@ -1,6 +1,6 @@
 {
   "name": "eify",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -13,6 +13,10 @@
     "typescript": "^2.7.1"
   },
   "devDependencies": {
-    "@types/node": "^9.4.4"
+    "@types/node": "^9.4.4",
+    "dn-middleware-call": "^1.0.3",
+    "dn-middleware-lint": "^2.1.4",
+    "dn-middleware-shell": "^1.1.0",
+    "dn-middleware-unit": "^0.2.1"
   }
 }

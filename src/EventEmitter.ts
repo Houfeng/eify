@@ -37,7 +37,7 @@ export class EventEmitter {
     final(this, '_target_', target);
     final(target, '_emitter_', this);
     this._isNative_ = this._isNativeObject(this._target_);
-    this._listeners_ = this._listeners_ || Object.create(null);
+    this._listeners_ = this._listeners_ || {};
   }
 
   /**

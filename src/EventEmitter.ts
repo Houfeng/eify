@@ -30,7 +30,7 @@ export class EventEmitter {
    * @param {object} target 将代理的目标对象可以省略
    * @returns {void} 无返回
    */
-  constructor(target: any) {
+  constructor(target?: any) {
     target = target || this;
     const emitter = target._emitter_;
     if (emitter) return emitter;

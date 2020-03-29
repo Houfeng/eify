@@ -1,19 +1,26 @@
+test:
+  - name: clean
+    target:
+      - dist
+      - types
+  - name: tslint
+
 build:
+  - name: clean
+    target:
+      - dist
+      - types
   - name: shell
     script:
       - tsc --locale zh-CN 
+      - rollup ./dist/es/index.js --file ./dist/cjs/index.js -f cjs
+      - rollup ./dist/es/index.js --file ./dist/umd/index.js -f umd -n eify
+      - rollup ./dist/es/index.js --file ./dist/iife/index.js -f iife -n eify
 
 dev:
   - name: shell
     script:
       - dn build
-
-test:
-  - name: call
-    pipe: build
-  - name: lint
-    source: ./src
-  - name: unit
 
 publish:
   - name: shell

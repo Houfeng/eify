@@ -23,8 +23,10 @@ dev:
       - dn build
 
 publish:
+  - name: version
   - name: shell
     script:
       - dn test
       - dn build
       - npm pu --registry=http://registry.npmjs.org
+  - name: submitter

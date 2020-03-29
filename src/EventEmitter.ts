@@ -2,11 +2,10 @@ import { final, isArray, copy } from "ntils";
 import { IEventDescriptor } from "./IEventDescriptor";
 
 export class EventEmitter {
-
-  //最多添加多少个 listener
+  // 最多添加多少个 listener
   protected static _maxListeners = 1024;
 
-  //所有自定义事件
+  // 所有自定义事件
   protected static _events: { [name: string]: IEventDescriptor } = {};
 
   /**
@@ -18,7 +17,7 @@ export class EventEmitter {
     const name = descriptor && descriptor.name;
     if (!name) return;
     const names = (isArray(name) ? name : [name]) as string[];
-    names.forEach(name => EventEmitter._events[name] = descriptor);
+    names.forEach(name => (EventEmitter._events[name] = descriptor));
   };
 
   protected _isNative_: boolean;
@@ -34,8 +33,8 @@ export class EventEmitter {
     target = target || this;
     const emitter = target._emitter_;
     if (emitter) return emitter;
-    final(this, '_target_', target);
-    final(target, '_emitter_', this);
+    final(this, "_target_", target);
+    final(target, "_emitter_", this);
     this._isNative_ = this._isNativeObject(this._target_);
     this._listeners_ = this._listeners_ || {};
   }
@@ -65,7 +64,8 @@ export class EventEmitter {
     const maxListeners = EventEmitter._maxListeners;
     if (this._listeners_[name].length > maxListeners) {
       console.warn(
-        `The '${name}' event listener is not more than ${maxListeners}`, this
+        `The '${name}' event listener is not more than ${maxListeners}`,
+        this
       );
     }
   }
@@ -129,7 +129,12 @@ export class EventEmitter {
    * @param {object} cancelAble 能否取消(只在代理 dom 对象时有效)
    * @returns {void} 无返回
    */
-  public emitAsync(name: string, data: any, canBubble = false, cancelAble = false) {
+  public emitAsync(
+    name: string,
+    data: any,
+    canBubble = false,
+    cancelAble = false
+  ) {
     if (this._isNative_) {
       return this._emitNativeEvent(name, data, canBubble, cancelAble);
     }
@@ -149,15 +154,22 @@ export class EventEmitter {
    * @param {object} cancelAble 能否取消(只在代理 dom 对象时有效)
    * @returns {void} 无返回
    */
-  public emitParallel(name: string, data: any, canBubble = false, cancelAble = false) {
+  public emitParallel(
+    name: string,
+    data: any,
+    canBubble = false,
+    cancelAble = false
+  ) {
     if (this._isNative_) {
       return this._emitNativeEvent(name, data, canBubble, cancelAble);
     }
     if (!this._listeners_[name]) return;
     const handlers = this._listeners_[name].slice(0);
-    return Promise.all(handlers.map(handler => {
-      return handler.call(this._target_, data);
-    }));
+    return Promise.all(
+      handlers.map(handler => {
+        return handler.call(this._target_, data);
+      })
+    );
   }
 
   /**
@@ -167,9 +179,13 @@ export class EventEmitter {
    * @param {capture} capture 是否是捕获阶段事件
    * @returns {void} 无返回
    */
-  protected _addNativeEventListener(name: string, handler: Function, capture = false) {
+  protected _addNativeEventListener(
+    name: string,
+    handler: Function,
+    capture = false
+  ) {
     this._target_.addEventListener(name, handler, capture);
-    //如果存在已注册的自定义 “组合事件”
+    // 如果存在已注册的自定义 “组合事件”
     const descriptor = EventEmitter._events[name];
     if (descriptor) descriptor.addListener(this, name, handler, capture);
   }
@@ -181,9 +197,13 @@ export class EventEmitter {
    * @param {capture} capture 是否是捕获阶段事件
    * @returns {void} 无返回
    */
-  protected _removeNativeEventListener(name: string, handler: Function, capture = false) {
+  protected _removeNativeEventListener(
+    name: string,
+    handler: Function,
+    capture = false
+  ) {
     this._target_.removeEventListener(name, handler, capture);
-    //如果存在已注册的自定义 “组合事件”
+    // 如果存在已注册的自定义 “组合事件”
     const descriptor = EventEmitter._events[name];
     if (descriptor) descriptor.removeListener(this, name, handler, capture);
   }
@@ -196,13 +216,17 @@ export class EventEmitter {
    * @param {object} cancelAble 能否取消
    * @returns {void} 无返回
    */
-  protected _emitNativeEvent(name: string, data: any, canBubble = false, cancelAble = false) {
+  protected _emitNativeEvent(
+    name: string,
+    data: any,
+    canBubble = false,
+    cancelAble = false
+  ) {
     if (typeof document === "undefined") return;
-    const event = document.createEvent('HTMLEvents');
+    const event = document.createEvent("HTMLEvents");
     event.initEvent(name, canBubble, cancelAble);
-    copy(data, event, ['data']);
+    copy(data, event, ["data"]);
     (event as any).data = data;
     return this._target_.dispatchEvent(event);
   }
-
 }

@@ -1,6 +1,6 @@
 {
   "name": "eify",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "",
   "main": "./dist/cjs/index.js",
   "module": "./dist/es/index.js",
@@ -31,5 +31,8 @@
     "dn-middleware-version": "^1.0.4",
     "rollup-plugin-node-resolve": "^5.2.0",
     "typescript": "4.6.4"
+  },
+  "dependencies": {
+    "tslib": "*"
   }
 }

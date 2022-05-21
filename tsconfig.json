@@ -14,6 +14,7 @@
     "noUnusedParameters": true,
     "esModuleInterop": true,
     "removeComments": true,
+    "importHelpers": true,
     "lib": [
       "dom",
       "es2017"

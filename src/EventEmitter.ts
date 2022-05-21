@@ -1,4 +1,5 @@
-import { AbstractEventEmitter } from "./AbstractEventEmitter";
+import { AbstractEventEmitter, StringKeyOf } from "./AbstractEventEmitter";
+
 import { EventEmitterOptions } from "./EventEmitterOptions";
 import { EventMap } from "./EventMap";
 
@@ -9,17 +10,31 @@ export class EventEmitter<
     super(options);
   }
 
-  public emit(...args: Parameters<AbstractEventEmitter<T>["emit"]>) {
-    return super.emit(...args);
+  public emit<N extends StringKeyOf<T>>(
+    name: N,
+    ...args: Parameters<T[N]>
+  ): ReturnType<T[N]>[] {
+    return super.emit(name, ...args);
   }
 
-  public emitAsync(...args: Parameters<AbstractEventEmitter<T>["emitAsync"]>) {
-    return super.emitAsync(...args);
+  public emitSerial<N extends StringKeyOf<T>>(
+    name: N,
+    ...args: Parameters<T[N]>
+  ): Promise<boolean> {
+    return super.emitSerial(name, ...args);
   }
 
-  public emitParallel(
-    ...args: Parameters<AbstractEventEmitter<T>["emitParallel"]>
-  ) {
-    return super.emitParallel(...args);
+  public emitParallel<N extends StringKeyOf<T>>(
+    name: N,
+    ...args: Parameters<T[N]>
+  ): Promise<ReturnType<T[N]>[]> {
+    return super.emitParallel(name, ...args);
+  }
+
+  public emitAsync<N extends StringKeyOf<T>>(
+    name: N,
+    ...args: Parameters<T[N]>
+  ): Promise<ReturnType<T[N]>[]> {
+    return this.emitAsync(name, ...args);
   }
 }

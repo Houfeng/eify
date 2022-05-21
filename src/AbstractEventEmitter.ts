@@ -28,8 +28,8 @@ export abstract class AbstractEventEmitter<T extends EventMap = EventMap> {
     }
   }
 
-  public on(...args: Parameters<AbstractEventEmitter<T>["addListener"]>): void {
-    return this.addListener(...args);
+  public on<N extends StringKeyOf<T>>(name: N, listener: T[N]): void {
+    return this.addListener(name, listener);
   }
 
   public removeListener<N extends StringKeyOf<T>>(
@@ -42,10 +42,8 @@ export abstract class AbstractEventEmitter<T extends EventMap = EventMap> {
     );
   }
 
-  public off(
-    ...args: Parameters<AbstractEventEmitter<T>["removeListener"]>
-  ): void {
-    return this.removeListener(...args);
+  public off<N extends StringKeyOf<T>>(name: N, listener: T[N]): void {
+    return this.removeListener(name, listener);
   }
 
   public removeAllListener<N extends StringKeyOf<T>>(name?: N): void {

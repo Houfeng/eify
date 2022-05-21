@@ -5,7 +5,6 @@ Eify is an EventEmitter that supports "synchronous, asynchronous, parallel and s
 # Usage
 
 ```ts
-import { AbstractEventEmitter, EventEmitter } from 'eify';
 
 // Example: Inherit AbstractEventEmitter 
 
@@ -77,5 +76,15 @@ await emitter.emitAsync("change", 1);
 // Wait for the asynchronous execution of all handlers to complete
 // All handlers will execute in parallel
 await emitter.emitParallel("change", 1);   
+
+// Example: Proxy the document
+
+const emitter = new DOMEventEmitter<{
+  [key in keyof DocumentEventMap]: (event: DocumentEventMap[key]) => void
+}>(document);
+
+emitter.on("wheel", event => event.deltaY);
+emitter.on("wheel", event => event.deltaY);
+emitter.removeListener("wheel");
 
 ```

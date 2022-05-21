@@ -2,7 +2,7 @@ import { AbstractEventEmitter } from "./AbstractEventEmitter";
 import { EventMap } from "./EventMap";
 
 export class EventEmitter<
-  T extends EventMap = any
+  T extends EventMap = EventMap
 > extends AbstractEventEmitter<T> {
   public emit(...args: Parameters<AbstractEventEmitter<T>["emit"]>) {
     return super.emit(...args);

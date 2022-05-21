@@ -1,2 +1,2 @@
-export * from "./IEventDescriptor";
+export * from "./EventDescriptor";
 export * from "./EventEmitter";

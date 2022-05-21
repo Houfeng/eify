@@ -7,7 +7,7 @@ Eify is an EventEmitter that supports "synchronous, asynchronous, parallel and s
 ```ts
 import { AbstractEventEmitter, EventEmitter } from 'eify';
 
-// AbstractEventEmitter
+// AbstractEventEmitter ------------------------------------------------------
 
 export class MyClass extends AbstractEventEmitter<{
   change1: (value: number) => void
@@ -24,7 +24,7 @@ export class MyClass extends AbstractEventEmitter<{
 const myInstance = new MyClass();
 myInstance.emit('change1', 1);    // ❌
 
-// EventEmitter 1
+// EventEmitter 1 ------------------------------------------------------------
 
 const emitter = new EventEmitter<{
   change1: (value: number) => void
@@ -36,7 +36,7 @@ emitter.emit("change1", "1");     // ❌
 emitter.emit("change2", "2");     // ✅
 emitter.emit("change2", 2);       // ❌ 
 
-// EventEmitter 2
+// EventEmitter 2 ------------------------------------------------------------
 
 export class MyClass {
   private emitter = emitter = new EventEmitter<{
@@ -61,7 +61,7 @@ export class MyClass {
 const myInstance = new MyClass();
 myInstance.emit('change1', 1);    // ❌
 
-// Async emit
+// Async emit ----------------------------------------------------------------
 
 const emitter = new EventEmitter<{
   change: (value: number) => Promise<void>

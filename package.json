@@ -8,7 +8,15 @@
   "scripts": {
     "test": "dn test && dn build -e prod"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Houfeng/eify.git"
+  },
+  "author": {
+    "name": "Houfeng",
+    "email": "houzhanfeng@gmail.com",
+    "url": "http://houfeng.net"
+  },
   "license": "MIT",
   "dependencies": {
     "ntils": "^5.1.1"

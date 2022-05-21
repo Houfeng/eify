@@ -1,3 +1,3 @@
-import { UnknownFunction } from "./UnknownFunction";
+import { AnyFunction } from "./AnyFunction";
 
-export type EventMap = Record<string, UnknownFunction>;
+export type EventMap = Record<string, AnyFunction>;

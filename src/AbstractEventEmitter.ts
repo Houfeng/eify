@@ -1,10 +1,10 @@
 import { copy, final, isArray } from "ntils";
 
+import { AnyFunction } from "./AnyFunction";
 import { EventDescriptor } from "./EventDescriptor";
 import { EventMap } from "./EventMap";
-import { UnknownFunction } from "./UnknownFunction";
 
-export abstract class AbstractEventEmitter<T extends EventMap> {
+export abstract class AbstractEventEmitter<T extends EventMap = any> {
   // 最多添加多少个 listener
   protected static _maxListeners_ = 1024;
 
@@ -41,7 +41,7 @@ export abstract class AbstractEventEmitter<T extends EventMap> {
   }
 
   private _isEventTarget_: boolean;
-  private _listeners_: Record<string, UnknownFunction[]> = {};
+  private _listeners_: Record<string, AnyFunction[]> = {};
   private _target_: any;
 
   /**

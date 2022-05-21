@@ -1,15 +1,15 @@
-import { EventEmitter } from "./EventEmitter";
+import { AbstractEventEmitter } from "./AbstractEventEmitter";
 
 export interface EventDescriptor {
   name: string | string[];
   addListener: (
-    emitter: EventEmitter<any>,
+    emitter: AbstractEventEmitter<any>,
     name: string,
     listener: Function,
     capture: boolean
   ) => void;
   removeListener: (
-    emitter: EventEmitter<any>,
+    emitter: AbstractEventEmitter<any>,
     name: string,
     listener: Function,
     capture: boolean

@@ -22,10 +22,8 @@ export class DOMEventEmitter<
     return DOMEventEmitter.__composeEvents[name];
   }
 
-  protected __removeRequireOneByOne = true;
-
   constructor(public target: EventTarget, options?: EventEmitterOptions) {
-    super(options);
+    super({ requireLoopRemove: true, ...options });
   }
 
   public addListener<N extends StringKeyOf<T>>(

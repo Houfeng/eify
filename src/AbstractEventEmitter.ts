@@ -7,12 +7,15 @@ export type StringKeyOf<T> = Exclude<keyof T, number | symbol>;
 export abstract class AbstractEventEmitter<T extends EventMap = EventMap> {
   private __maxListeners: number;
   private __listeners: Record<string, AnyFunction[]>;
-  protected __removeRequireOneByOne = false;
+  private __requireLoopRemove: boolean;
 
-  constructor(options?: EventEmitterOptions) {
-    const { maxListeners = 1024 } = { ...options };
+  constructor(options?: EventEmitterOptions & { requireLoopRemove?: boolean }) {
+    const { maxListeners = 1024, requireLoopRemove = false } = {
+      ...options
+    };
     this.__maxListeners = maxListeners;
     this.__listeners = {};
+    this.__requireLoopRemove = requireLoopRemove;
   }
 
   public addListener<N extends StringKeyOf<T>>(name: N, listener: T[N]): void {
@@ -47,14 +50,14 @@ export abstract class AbstractEventEmitter<T extends EventMap = EventMap> {
 
   public removeAllListener<N extends StringKeyOf<T>>(name?: N): void {
     if (name) {
-      if (this.__removeRequireOneByOne && this.__listeners[name]) {
+      if (this.__requireLoopRemove && this.__listeners[name]) {
         this.__listeners[name].slice(0).forEach(it => {
           this.removeListener(name, it as T[N]);
         });
       }
       this.__listeners[name] = [];
     } else {
-      if (this.__removeRequireOneByOne) {
+      if (this.__requireLoopRemove) {
         Object.keys(this.__listeners).forEach(it => {
           this.removeAllListener(it as N);
         });

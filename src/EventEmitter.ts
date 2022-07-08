@@ -35,6 +35,6 @@ export class EventEmitter<
     name: N,
     ...args: Parameters<T[N]>
   ): Promise<ReturnType<T[N]>[]> {
-    return this.emitAsync(name, ...args);
+    return super.emitAsync(name, ...args);
   }
 }
